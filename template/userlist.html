@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Page</title>
+  <style>
+    body {
+      background-color: #222;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .container {
+      max-width: 75%;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .user-list {
+      width: 48%;
+    }
+
+    .search-container {
+      width: 48%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid #444;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #007BFF;
+      color: #fff;
+    }
+
+    tr:nth-child(even) {
+      background-color: #333;
+    }
+
+    .button-container {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .button {
+      background-color: #007BFF;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      margin-right: 10px;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #333;
+      color: #fff;
+    }
+
+    .search-button {
+      background-color: #007BFF;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .search-button:hover {
+      background-color: #0056b3;
+    }
+
+    .result-container {
+      margin-top: 20px;
+    }
+    .button-edit {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-right: 10px;
+    margin-top: 10px;
+    font-size: 15px;
+
+    }
+    .button-delete {
+    background-color: #f12617;
+    color: #fff;
+    padding: 5px 8px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 15px;
+    margin-top: 10px;
+    }
+
+    .button-edit:hover {
+    background-color: #0056b3;
+    }
+    .button-delete:hover {
+    background-color: #dd0303;
+    }
+    .buttons{
+      display: flex;
+    }
+    .main-head{
+      font-size: medium;
+      height: 50px;
+      background-color: #0056b3;
+    }
+
+    
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to Admin Panel, {{.admin}}</h1>
+  </header>
+  <div class="container">
+    <div class="button-container">
+      <a class="button" href="/admin/createadmin">Create New Admin</a>
+      <a class="button" href="/admin/createuser">Create New User</a>
+      <a class="button" href="/user/home">Home</a>
+      <a class="button" href="/user/logout">Logout</a>
+    </div>
+    <section class="user-list">
+      <table>
+        <caption class="main-head"><h1>Userlist</h1></caption>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .users }}
+          <tr>
+            <td>{{ .Username }}</td>
+            <td>{{ .Email }}</td>
+            <td>
+              <div class="buttons">
+                <a href="/admin/{{ .Username }}/edituser" class="button-edit">Edit</a>
+                <form action="/admin/{{ .Username }}/deleteuser" method="post">
+                  <button class="button-delete" type="submit">Delete</button>
+                </form>
+              </div>
+                
+            </td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="search-container">
+      <h2>Search Users</h2>
+      <form action="/admin/userlist" method="POST">
+        <input type="text" name="search" placeholder="Search by Username">
+        <button class="search-button" type="submit">Search</button>
+      </form>
+
+      <section class="result-container">
+
+        {{.searcherror}}
+
+        <h2>Search Results</h2>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range .search }}
+            <tr>
+              <td>{{ .Username }}</td>
+              <td>{{ .Email }}</td>
+              <td>
+                    <a href="/admin/{{ .Username }}/edituser" class="button-edit">Edit</a>
+                    <br><br>
+                    <form action="/admin/{{ .Username }}/deleteuser" method="post">
+                      <button class="button-delete" type="submit">Delete</button>
+                    </form>
+              </td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
+        
+      </section>
+    </section>
+  </div>
+</body>
+</html>
